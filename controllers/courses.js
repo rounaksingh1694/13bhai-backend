@@ -131,62 +131,60 @@ exports.getSkillShareCourses = (req, res, next) => {
 	getSerializedData();
 };
 
-exports.getUdemyCourses = (req, res, next) => {
-	var query = req.query.q;
-	fetchCourses(query);
-	async function fetchCourses(query) {
-		var link =
-			"https://www.udemy.com/api-2.0/courses/?page_size=50&search=" + query;
+// exports.getUdemyCourses = (req, res, next) => {
+// 	var query = req.query.q;
+// 	fetchCourses(query);
+// 	async function fetchCourses(query) {
+// 		var link =
+// 			"https://www.udemy.com/api-2.0/courses/?page_size=50&search=" + query;
 
-		var obj = {
-			method: "GET",
-			headers: {
-				Accept: "application/json",
-				Authorization: `Basic ${process.env.UDEMY_TOKEN}`,
-				"Content-Type": "application/json",
-			},
-		};
+// 		var obj = {
+// 			method: "GET",
+// 			headers: {
+// 				Accept: "application/json",
+// 				Authorization: `Basic ${process.env.UDEMY_TOKEN}`,
+// 				"Content-Type": "application/json",
+// 			},
+// 		};
 
-		const response = await fetch(link, obj);
-		const json = await response.json();
-		var courses = json.results;
-		var list = [];
-		for (let index = 0; index < courses.length; index++) {
-			const course = courses[index];
-			var title = course.title;
-			var author = "";
-			for (let i = 0; i < course.visible_instructors.length; i++) {
-				const element = course.visible_instructors[i];
-				if (i != course.visible_instructors.length - 1)
-					author += element.display_name + " & ";
-				else author += element.display_name;
-			}
-			var price = course.price;
-			var usp = course.headline;
-			var imgUrl = course.image_240x135;
-			var url = "https://www.udemy.com" + course.url;
-			var item_json = {
-				title: title,
-				price: price,
-				usp: usp ? usp : "",
-				author: author ? author : "",
-				imgUrl: imgUrl ? imgUrl : "",
-				url: url ? url : "",
-			};
-			list.push(item_json);
-		}
+// 		const response = await fetch(link, obj);
+// 		const json = await response.json();
+// 		var courses = json.results;
+// 		var list = [];
+// 		for (let index = 0; index < courses.length; index++) {
+// 			const course = courses[index];
+// 			var title = course.title;
+// 			var author = "";
+// 			for (let i = 0; i < course.visible_instructors.length; i++) {
+// 				const element = course.visible_instructors[i];
+// 				if (i != course.visible_instructors.length - 1)
+// 					author += element.display_name + " & ";
+// 				else author += element.display_name;
+// 			}
+// 			var price = course.price;
+// 			var usp = course.headline;
+// 			var imgUrl = course.image_240x135;
+// 			var url = "https://www.udemy.com" + course.url;
+// 			var item_json = {
+// 				title: title,
+// 				price: price,
+// 				usp: usp ? usp : "",
+// 				author: author ? author : "",
+// 				imgUrl: imgUrl ? imgUrl : "",
+// 				url: url ? url : "",
+// 			};
+// 			list.push(item_json);
+// 		}
 
-		var courseJson = {
-			platformName: "Udemy",
-			courses: list,
-		};
-		req.udemyCourses = courseJson;
-		next();
-	}
-};
+// 		var courseJson = {
+// 			platformName: "Udemy",
+// 			courses: list,
+// 		};
+// 		req.udemyCourses = courseJson;
+// 		next();
+// 	}
+// };
 
 exports.getCourses = (req, res) => {
-	res
-		.status(200)
-		.json([req.udemyCourses, req.skillShareCourses, req.courseraCourses]);
+	res.status(200).json([req.skillShareCourses, req.courseraCourses]);
 };

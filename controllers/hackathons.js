@@ -127,5 +127,5 @@ exports.getDevpostHackathons = (req, res, next) => {
 };
 
 exports.getHackathons = (req, res) => {
-	res.status(200).json([req.devFolioHackathons, req.devpostHackathons]);
+	res.status(200).json([req.devpostHackathons]);
 };
